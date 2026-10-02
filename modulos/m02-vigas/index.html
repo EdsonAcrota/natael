@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NATAEL Vigas</title>
+<meta name="description" content="NATAEL Vigas: diseño a flexión de vigas rectangulares de concreto armado simple y doblemente reforzadas según la Norma E.060, con memoria de cálculo paso a paso.">
+<meta name="author" content="Edson Ever Quispe Acrota">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../nucleo/natael.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+    svg: { fontCache: 'global' },
+    startup: {
+      typeset: false,
+      ready: function () {
+        MathJax.startup.defaultReady();
+        MathJax.startup.promise.then(function () {
+          var m = document.getElementById('memoria');
+          if (m && m.innerHTML) MathJax.typesetPromise([m]);
+        });
+      }
+    }
+  };
+</script>
+<script src="../../nucleo/vendor/mathjax/tex-svg.js" defer></script>
+</head>
+<body>
+<!--NATAEL:CUERPO-->
+<header class="barra no-imprimir">
+  <a class="marca" href="../../index.html" aria-label="NATAEL, inicio de la suite">
+    <span class="marca-logo">NAT<b>A</b>EL</span><span class="marca-mod">Vigas · M02</span>
+  </a>
+  <div class="barra-der">
+    <span>Diseño a flexión de vigas rectangulares</span>
+    <span class="etiqueta-norma">E.060 · v1.0</span>
+  </div>
+</header>
+
+<main class="app">
+  <!-- ==================== DATOS ==================== -->
+  <form id="formulario" class="panel formulario no-imprimir" autocomplete="off" novalidate>
+    <div class="grupo">
+      <div class="casos" role="group" aria-label="Casos de viga precargados">
+        <button type="button" data-ejemplo="ej1" aria-pressed="false">Simplemente reforzada</button>
+        <button type="button" data-ejemplo="ej2" aria-pressed="false">Doblemente reforzada</button>
+      </div>
+      <p id="tipo-actual" class="tipo-actual" aria-live="polite"></p>
+    </div>
+
+    <fieldset class="grupo">
+      <legend>Cálculo</legend>
+      <div class="segmentado" role="radiogroup" aria-label="Tipo de cálculo">
+        <input type="radio" id="modo-d" name="modo" value="diseno" checked><label for="modo-d">Diseñar el acero</label>
+        <input type="radio" id="modo-v" name="modo" value="verificacion"><label for="modo-v">Verificar un armado</label>
+      </div>
+      <div class="campo">
+        <label for="unidades">Unidades</label>
+        <select id="unidades">
+          <option value="MKS" selected>MKS: cm, kgf/cm², tf·m</option>
+          <option value="SI">SI: mm, MPa, kN·m</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend>Sección</legend>
+      <div class="fila">
+        <div class="campo"><label for="b">Ancho <i>b</i><span class="u" data-dim="long">cm</span></label><input id="b" type="number" step="any" inputmode="decimal"></div>
+        <div class="campo"><label for="h">Peralte <i>h</i><span class="u" data-dim="long">cm</span></label><input id="h" type="number" step="any" inputmode="decimal"></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="rec">Recubrimiento<span class="u" data-dim="long">cm</span></label><input id="rec" type="number" step="any" inputmode="decimal"></div>
+        <div class="campo"><label for="estribo">Estribo</label><select id="estribo"></select></div>
+      </div>
+      <p class="ayuda">Recubrimiento libre hasta el estribo: 4 cm (40 mm) en vigas interiores (E.060, 7.7.1).</p>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend>Materiales</legend>
+      <div class="fila">
+        <div class="campo"><label for="fc"><i>f′c</i><span class="u" data-dim="esf">kgf/cm²</span></label><input id="fc" type="number" step="any" inputmode="decimal"></div>
+        <div class="campo"><label for="fy"><i>fy</i><span class="u" data-dim="esf">kgf/cm²</span></label><input id="fy" type="number" step="any" inputmode="decimal"></div>
+      </div>
+    </fieldset>
+
+    <fieldset class="grupo">
+      <legend>Solicitaciones</legend>
+      <div class="fila">
+        <div class="campo"><label for="Mu">Momento <i>Mu</i><span class="u" data-dim="mom">tf·m</span></label><input id="Mu" type="number" step="any" inputmode="decimal"></div>
+        <div class="campo"><label for="Ms">Servicio <i>Ms</i><span class="u" data-dim="mom">tf·m</span></label><input id="Ms" type="number" step="any" inputmode="decimal" placeholder="opcional"></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="ln">Luz libre <i>ℓn</i><span class="u" data-dim="long">cm</span></label><input id="ln" type="number" step="any" inputmode="decimal" placeholder="opcional"></div>
+        <div class="campo"><label for="sismo">Sistema estructural</label>
+          <select id="sismo">
+            <option value="ninguno">Viga no sismorresistente</option>
+            <option value="21.4">Muros o dual tipo I (E.060, 21.4)</option>
+            <option value="21.5">Pórticos o dual tipo II (E.060, 21.5)</option>
+          </select>
+        </div>
+      </div>
+      <p class="ayuda">Mu con las combinaciones de la E.060, 9.2. Ms activa el control de fisuración (9.9.3); ℓn verifica que no sea viga de gran peralte (10.7). Si la viga resiste sismo, elija el sistema estructural: el programa exige acero mínimo en las dos caras y revisa la relación entre momentos positivo y negativo (E.060, cap. 21).</p>
+    </fieldset>
+
+    <fieldset class="grupo" id="diseno-campos">
+      <legend>Barras a usar</legend>
+      <div class="fila">
+        <div class="campo"><label for="barraT">Inferiores (tracción)</label><select id="barraT"></select></div>
+        <div class="campo"><label for="barraC">Superiores (compresión)</label><select id="barraC"></select></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="nT">Cantidad inferior</label><input id="nT" type="number" min="2" step="1" placeholder="automática"></div>
+        <div class="campo"><label for="nC">Cantidad superior</label><input id="nC" type="number" min="0" step="1" placeholder="automática"></div>
+      </div>
+      <p class="ayuda">Deje la cantidad vacía para que el programa la calcule, o escriba cuántas barras quiere colocar y el programa las verifica.</p>
+    </fieldset>
+
+    <fieldset class="grupo" id="verif-campos" hidden>
+      <legend>Armado a verificar</legend>
+      <div class="fila">
+        <div class="campo"><label for="c1n">Capa inferior, n.º</label><input id="c1n" type="number" min="0" step="1"></div>
+        <div class="campo"><label for="c1id">Diámetro</label><select id="c1id"></select></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="c2n">Segunda capa, n.º</label><input id="c2n" type="number" min="0" step="1"></div>
+        <div class="campo"><label for="c2id">Diámetro</label><select id="c2id"></select></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="ccn">Superiores, n.º</label><input id="ccn" type="number" min="0" step="1"></div>
+        <div class="campo"><label for="ccid">Diámetro</label><select id="ccid"></select></div>
+      </div>
+    </fieldset>
+
+    <fieldset class="grupo" data-memoria>
+      <legend>Datos para la memoria</legend>
+      <div class="campo"><label for="proyecto">Proyecto</label><input id="proyecto" type="text" value="Vivienda multifamiliar de 5 pisos (ejemplo)"></div>
+      <div class="campo"><label for="elemento">Elemento</label><input id="elemento" type="text"></div>
+      <div class="fila">
+        <div class="campo"><label for="proyectista">Proyectista</label><input id="proyectista" type="text" value="Edson Ever Quispe Acrota"></div>
+        <div class="campo"><label for="fecha">Fecha</label><input id="fecha" type="text"></div>
+      </div>
+    </fieldset>
+  </form>
+
+  <!-- ==================== RESULTADOS ==================== -->
+  <section class="resultados" aria-live="polite">
+    <p id="aviso-previa" class="aviso-previa no-imprimir" hidden>Vista previa en línea. En la versión instalada están además los botones Imprimir memoria (PDF), Descargar LaTeX (.tex) y Descargar plano (DXF).</p>
+    <div id="avisos" class="avisos" hidden></div>
+    <div id="errores" class="errores" hidden></div>
+
+    <div id="zona-resultados">
+      <div class="resultados">
+        <div id="veredicto" class="veredicto">
+          <span id="veredicto-estado" class="veredicto-estado">—</span>
+          <span id="veredicto-tipo" class="tipo-viga"></span>
+          <span id="veredicto-texto" class="veredicto-texto"></span>
+          <span class="veredicto-acciones"><button type="button" class="btn-principal btn-imprimir">Imprimir memoria</button></span>
+        </div>
+
+        <div class="metricas">
+          <div class="metrica"><span class="metrica-rotulo">Acero inferior colocado</span><span id="m-as" class="metrica-valor">—</span><span id="m-as-d" class="metrica-detalle"></span></div>
+          <div class="metrica"><span class="metrica-rotulo">Acero superior</span><span id="m-asp" class="metrica-valor">—</span><span id="m-asp-d" class="metrica-detalle"></span></div>
+          <div class="metrica"><span class="metrica-rotulo">Resistencia de diseño φMn</span><span id="m-phimn" class="metrica-valor">—</span><span id="m-phimn-d" class="metrica-detalle"></span><div id="m-medidor" class="medidor"><span></span></div></div>
+          <div class="metrica"><span class="metrica-rotulo">Deformación del acero εt</span><span id="m-et" class="metrica-valor">—</span><span id="m-et-d" class="metrica-detalle"></span></div>
+        </div>
+
+        <div class="dos-col">
+          <div class="panel tarjeta">
+            <div class="tarjeta-cab"><h3>Sección y armado</h3><button type="button" class="btn-dxf">Descargar plano (DXF)</button></div>
+            <div id="svg-seccion"></div>
+            <p id="armado-texto" class="armado-texto"></p>
+          </div>
+          <div class="panel tarjeta">
+            <h3>Verificaciones E.060</h3>
+            <ul id="lista-ver" class="lista-ver"></ul>
+          </div>
+        </div>
+
+        <div id="opciones-panel" class="panel tarjeta opciones-panel no-imprimir">
+          <h3>Otras opciones de barras inferiores</h3>
+          <div class="tabla-scroll">
+            <table class="opciones">
+              <thead><tr><th>Armado</th><th class="num">Capas</th><th class="num">As</th><th class="num">Exceso</th><th>Estado</th><th></th></tr></thead>
+              <tbody id="tabla-opciones"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel memoria-marco">
+          <div class="memoria-barra">
+            <h3>Memoria de cálculo</h3><span class="espacio"></span>
+            <button type="button" class="btn-latex">Descargar LaTeX (.tex)</button>
+            <button type="button" class="btn-imprimir">Imprimir memoria (PDF)</button>
+          </div>
+          <article id="memoria" class="memoria"></article>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="creditos no-imprimir">
+  <span><strong>NATAEL Vigas</strong> v1.0 · Programa M02 de la suite NATAEL</span>
+  <span>© 2026 Edson Ever Quispe Acrota, autor. Todos los derechos reservados.</span>
+</footer>
+<!--NATAEL:FIN-CUERPO-->
+<script src="../../nucleo/natael-nucleo.js"></script>
+<script src="m02-calculo.js"></script>
+<script src="m02-plano.js"></script>
+<script src="m02-memoria.js"></script>
+<script src="m02-interfaz.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NATAEL</title>
+<meta name="description" content="NATAEL: suite web gratuita de diseño de elementos de concreto armado según el RNE (E.060, E.030, E.050) con memoria de cálculo paso a paso.">
+<meta name="author" content="Edson Ever Quispe Acrota">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="nucleo/natael.css">
+<style>
+  .portada { max-width: 1080px; margin: 0 auto; padding-inline: 20px; padding-block: 44px 56px; display: grid; gap: 28px; }
+  .portada h1 { font: 800 clamp(34px, 6vw, 56px)/1 var(--f-display); letter-spacing: 0.14em; margin: 0; }
+  .portada h1 b { color: var(--acento); }
+  .lema { font-size: 18px; max-width: 62ch; margin: 0; color: var(--tenue); text-wrap: balance; }
+  .normas { display: flex; flex-wrap: wrap; gap: 8px; }
+  .modulos { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .modulo { display: grid; gap: 6px; align-content: start; padding: 16px; border: 1px solid var(--linea); border-radius: var(--radio); background: var(--superficie); color: inherit; text-decoration: none; }
+  a.modulo:hover { border-color: var(--acento); }
+  .modulo-cod { font: 600 12px var(--f-num); color: var(--tenue); display: flex; justify-content: space-between; gap: 8px; }
+  .modulo h2 { font: 700 18px/1.2 var(--f-display); margin: 0; }
+  .modulo p { margin: 0; font-size: 13.5px; color: var(--tenue); }
+  .modulo.pendiente { background: transparent; border-style: dashed; }
+  .modulo.pendiente h2 { color: var(--tenue); }
+  .pie { font-size: 13px; color: var(--tenue); border-top: 1px solid var(--linea); padding-top: 14px; }
+</style>
+</head>
+<body>
+<main class="portada">
+  <header style="display:grid;gap:14px">
+    <h1>NAT<b>A</b>EL</h1>
+    <p class="lema">Diseño de elementos de concreto armado según el Reglamento Nacional de Edificaciones, con una memoria de cálculo que muestra cada fórmula, sus valores y el artículo de la norma que la exige.</p>
+    <div class="normas"><span class="etiqueta-norma">E.060</span><span class="etiqueta-norma">E.030</span><span class="etiqueta-norma">E.050</span><span class="etiqueta-norma">E.020</span><span class="etiqueta-norma">ACI 318-25</span></div>
+  </header>
+
+  <section class="modulos" aria-label="Programas de la suite">
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M01</span><span class="chip chip-info">En desarrollo</span></span><h2>Predimensionamiento</h2><p>Losas, vigas, columnas y placas.</p></div>
+    <a class="modulo" href="modulos/m02-vigas/index.html"><span class="modulo-cod"><span>M02</span><span class="chip chip-ok">Disponible</span></span><h2>NATAEL Vigas</h2><p>Flexión en vigas rectangulares simple y doblemente reforzadas.</p></a>
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M03</span><span class="chip chip-info">En desarrollo</span></span><h2>Vigas a corte</h2><p>Estribos por resistencia y por capacidad.</p></div>
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M04</span><span class="chip chip-info">En desarrollo</span></span><h2>Columnas</h2><p>Diagrama de interacción y esbeltez.</p></div>
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M05</span><span class="chip chip-info">En desarrollo</span></span><h2>Zapatas aisladas</h2><p>Presiones, punzonamiento, corte y flexión.</p></div>
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M06</span><span class="chip chip-info">En desarrollo</span></span><h2>Zapatas combinadas</h2><p>Combinadas y conectadas.</p></div>
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M07</span><span class="chip chip-info">En desarrollo</span></span><h2>Losas aligeradas</h2><p>Acero por vigueta y ensanches.</p></div>
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M08</span><span class="chip chip-info">En desarrollo</span></span><h2>Losas macizas</h2><p>Dos direcciones, método de coeficientes.</p></div>
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M09</span><span class="chip chip-info">En desarrollo</span></span><h2>Placas</h2><p>Muros estructurales.</p></div>
+    <div class="modulo pendiente"><span class="modulo-cod"><span>M10</span><span class="chip chip-info">En desarrollo</span></span><h2>Muros de contención</h2><p>Estabilidad y refuerzo.</p></div>
+  </section>
+
+  <p class="pie">NATAEL v1.0 · Autor: Edson Ever Quispe Acrota · Lima, 2026. El proyectista es responsable de verificar los datos de entrada y la aplicabilidad de los resultados.</p>
+</main>
+</body>
+</html>
