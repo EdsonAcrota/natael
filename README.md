@@ -64,3 +64,6 @@ redondeos de los autores y por el módulo de elasticidad del acero usado en cada
 
 © 2026 Edson Ever Quispe Acrota. Todos los derechos reservados, salvo las bibliotecas de
 terceros incluidas en `nucleo/vendor`, que conservan sus propias licencias.
+
+
+Prueba de edicion desde mi pc
